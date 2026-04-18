@@ -26,6 +26,15 @@ interface Report {
   submitted_at: string
 }
 
+export interface SelectedRoad {
+  id: number
+  name: string
+  highway: string
+  busyness: number
+  color: string
+  label: string
+}
+
 interface SimInputs {
   scenario: string
   roads_affected: number
@@ -46,12 +55,18 @@ interface AppStore {
   reports: Report[]
   loading: boolean
   simInputs: SimInputs
+  roadGeoJSON: GeoJSON.FeatureCollection | null
+  roadsLoading: boolean
+  selectedRoad: SelectedRoad | null
   setDistricts: (d: District[]) => void
   setSelectedDistrict: (d: District) => void
   setPredictions: (p: Predictions) => void
   setReports: (r: Report[]) => void
   setLoading: (l: boolean) => void
   updateSimInput: (key: keyof SimInputs, value: number | string) => void
+  setRoadGeoJSON: (g: GeoJSON.FeatureCollection | null) => void
+  setRoadsLoading: (l: boolean) => void
+  setSelectedRoad: (r: SelectedRoad | null) => void
 }
 
 export const useStore = create<AppStore>((set) => ({
@@ -60,6 +75,9 @@ export const useStore = create<AppStore>((set) => ({
   predictions: null,
   reports: [],
   loading: false,
+  roadGeoJSON: null,
+  roadsLoading: false,
+  selectedRoad: null,
   simInputs: {
     scenario: 'Flood / Waterlogging',
     roads_affected: 2,
@@ -73,10 +91,13 @@ export const useStore = create<AppStore>((set) => ({
     is_mobile_stress: 0,
   },
   setDistricts: (districts) => set({ districts }),
-  setSelectedDistrict: (selectedDistrict) => set({ selectedDistrict }),
+  setSelectedDistrict: (selectedDistrict) => set({ selectedDistrict, roadGeoJSON: null, selectedRoad: null }),
   setPredictions: (predictions) => set({ predictions }),
   setReports: (reports) => set({ reports }),
   setLoading: (loading) => set({ loading }),
   updateSimInput: (key, value) =>
     set((state) => ({ simInputs: { ...state.simInputs, [key]: value } })),
+  setRoadGeoJSON: (roadGeoJSON) => set({ roadGeoJSON }),
+  setRoadsLoading: (roadsLoading) => set({ roadsLoading }),
+  setSelectedRoad: (selectedRoad) => set({ selectedRoad }),
 }))

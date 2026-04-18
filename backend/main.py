@@ -17,7 +17,7 @@ from contextlib import asynccontextmanager
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-from routers import districts, predict, reports
+from routers import districts, predict, reports, roads
 from services import model_service
 
 
@@ -70,6 +70,7 @@ app.add_middleware(
 app.include_router(districts.router, prefix="/api")
 app.include_router(predict.router,   prefix="/api")
 app.include_router(reports.router,   prefix="/api")
+app.include_router(roads.router,     prefix="/api")
 
 
 # ---------------------------------------------------------------------------
